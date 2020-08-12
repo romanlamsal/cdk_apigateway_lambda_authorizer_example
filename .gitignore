@@ -1,0 +1,9 @@
+/.idea/
+/d3/
+node_modules/
+build/
+/terraform/.terraform/
+/backend/db.json
+*.zip
+coverage/
+/scripts/

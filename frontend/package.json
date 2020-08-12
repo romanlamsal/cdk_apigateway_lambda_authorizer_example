@@ -1,0 +1,59 @@
+{
+  "name": "de.lamsal.basicproject",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/react-fontawesome": "^0.1.7",
+    "axios": "^0.19.2",
+    "lodash": "^4.17.15",
+    "node-sass": "^4.13.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.2.0",
+    "typescript": "3.7.2"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/enzyme": "^3.10.3",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
+    "@types/jest": "24.0.23",
+    "@types/lodash": "^4.14.150",
+    "@types/nock": "^11.1.0",
+    "@types/node": "12.12.12",
+    "@types/react": "16.9.13",
+    "@types/react-dom": "16.9.4",
+    "@types/react-router-dom": "^5.1.4",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.15.1",
+    "full-icu": "^1.3.1",
+    "nock": "^11.7.0"
+  },
+  "scripts": {
+    "start:win": "set NODE_ENV=local && react-scripts start",
+    "build": "NODE_ENV=production REACT_APP_BUILD_TIMESTAMP=$(date +\"%Y-%m-%dT%H:%M:%S\") react-scripts build",
+    "build:win": "set NODE_ENV=production && set REACT_APP_BUILD_TIMESTAMP=%date%T%time% && react-scripts build",
+    "deploy": "aws s3 sync build s3://${GUI_BUCKET_NAME} --delete --acl public-read-write && aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths \"/index.html\" >> /dev/null",
+    "test": "react-scripts test",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
