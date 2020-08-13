@@ -26,7 +26,8 @@ export class LambdaApiEndpoint extends cdk.Construct {
 
         if (authorizer) {
             const authorizerIntegrationProps: Pick<apigateway.MethodOptions, "authorizer" | "authorizationType"> = {
-                authorizationType: apigateway.AuthorizationType.CUSTOM, authorizer
+                authorizationType: apigateway.AuthorizationType.CUSTOM,
+                authorizer
             }
             integrationProps = Object.assign(integrationProps, authorizerIntegrationProps)
         }

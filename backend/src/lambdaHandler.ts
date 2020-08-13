@@ -3,7 +3,7 @@ export const helloWorldHandler = () => Promise.resolve({
 })
 
 export const authorizerHandler = (event: any) => {
-    const allow = event.queryStringParameters === "allow"
+    const allow = event.queryStringParameters.apiKey === "allow"
     return Promise.resolve({
         principalId: "someone",
         policyDocument: {

@@ -3,6 +3,8 @@ Working example, powered by aws-cdk, consisting of:
 * Construct for REST Api
 * Construct for Lambda endpoints in the REST Api
 
+Run `cdk bootstrap` when asked to bootstrap, not `cdk bootstrap aws://unknown-account/unknown-region`.
+
 ## Original CDK README content
 Just as a reference for the future.
 

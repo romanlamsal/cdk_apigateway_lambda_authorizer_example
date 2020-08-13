@@ -16,18 +16,18 @@ export class BackendStack extends cdk.Stack {
         const helloWorldLambda = this.setupSimpleLambda()
 
         new LambdaApiEndpoint(apiGateway, APP_NAME + "_hello_world", {
-            apiGateway,
+            apiGateway: apiGateway,
             handler: helloWorldLambda,
             path: "/hello/world",
             method: HTTP_METHOD.GET,
         })
 
         new LambdaApiEndpoint(apiGateway, APP_NAME + "_goodbye_universe", {
-            apiGateway,
+            apiGateway: apiGateway,
             handler: helloWorldLambda,
             path: "/goodbye/universe",
             method: HTTP_METHOD.GET,
-            authorizer
+            authorizer: authorizer
         })
     }
 
@@ -43,13 +43,13 @@ export class BackendStack extends cdk.Stack {
     }
 
     setupSimpleLambda(): lambda.Function {
-        return new lambda.Function(this, "helloWorldLambda", {
+        return new lambda.Function(this, "helloWorlauthorizerHandlerServiceRoledLambda", {
             runtime: lambda.Runtime.NODEJS_12_X,
             code: lambda.Code.fromAsset(RESOURCES.backend),
             handler: "lambdaHandler.helloWorldHandler",
             environment: {
                 ORIGIN: APP_NAME
-            }
+            },
         })
     }
 }
