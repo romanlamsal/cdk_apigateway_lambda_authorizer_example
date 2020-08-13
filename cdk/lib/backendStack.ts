@@ -1,43 +1,52 @@
 import * as cdk from '@aws-cdk/core'
 import * as lambda from "@aws-cdk/aws-lambda"
 import { APP_NAME, RESOURCES } from "../bin/cdk"
-import { AuthStruct } from "./authStruct"
-import { ApiGatewayStruct, HTTP_METHOD } from "./apiGatewayStruct"
+import { ApiGatewayStruct, HTTP_METHOD } from "./ApiGatewayStruct"
+import { LambdaApiEndpoint } from "./LambdaApiEndpoint"
 
 export class BackendStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props)
 
-        /*const { login, authorizer } = new AuthStruct(this, "BackendAuthorizerStack", {
-            accountId: this.account
-        })*/
+        const authorizerLambda = this.setupAuthorizerLambda()
+        const { apiGateway, authorizer } = new ApiGatewayStruct(this, "BackendApiGatewayStack", {
+            authorizer: authorizerLambda,
+        })
 
-        const validate = this.setupCheckTokenLambda()
+        const helloWorldLambda = this.setupSimpleLambda()
 
-        new ApiGatewayStruct(this, "BackendApiGatewayStack", {
-            authorizer,
-            restApiEndpoints: [
-                {
-                    handler: login,
-                    path: "/login",
-                    method: HTTP_METHOD.POST,
-                    useAuthorizer: false
-                },
-                {
-                    handler: validate,
-                    path: "/login",
-                    method: HTTP_METHOD.GET,
-                    useAuthorizer: true
-                }
-            ]
+        new LambdaApiEndpoint(apiGateway, APP_NAME + "_hello_world", {
+            apiGateway,
+            handler: helloWorldLambda,
+            path: "/hello/world",
+            method: HTTP_METHOD.GET,
+        })
+
+        new LambdaApiEndpoint(apiGateway, APP_NAME + "_goodbye_universe", {
+            apiGateway,
+            handler: helloWorldLambda,
+            path: "/goodbye/universe",
+            method: HTTP_METHOD.GET,
+            authorizer
         })
     }
 
-    setupCheckTokenLambda(): lambda.Function {
-        return new lambda.Function(this, "checkToken", {
+    setupAuthorizerLambda(): lambda.Function {
+        return new lambda.Function(this, "authorizerHandler", {
             runtime: lambda.Runtime.NODEJS_12_X,
             code: lambda.Code.fromAsset(RESOURCES.backend),
-            handler: "lambdaHandler.checkTokenHandler",
+            handler: "lambdaHandler.authorizerHandler",
+            environment: {
+                ORIGIN: APP_NAME
+            }
+        })
+    }
+
+    setupSimpleLambda(): lambda.Function {
+        return new lambda.Function(this, "helloWorldLambda", {
+            runtime: lambda.Runtime.NODEJS_12_X,
+            code: lambda.Code.fromAsset(RESOURCES.backend),
+            handler: "lambdaHandler.helloWorldHandler",
             environment: {
                 ORIGIN: APP_NAME
             }
